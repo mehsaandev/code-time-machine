@@ -1,9 +1,9 @@
 {
-  "name": "code-time-machine",
-  "displayName": "Code Time Machine",
+  "name": "visual-code-time-machine",
+  "displayName": "Visual Code Time Machine",
   "description": "Local data-capture layer for visualizing how code evolves over time",
   "version": "0.1.0",
-  "publisher": "code-time-machine",
+  "publisher": "MuhammadEhsaan",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -22,40 +22,40 @@
   "contributes": {
     "commands": [
       {
-        "command": "codeTimeMachine.startSession",
+        "command": "visualCodeTimeMachine.startSession",
         "title": "Code Time Machine: Start Session"
       },
       {
-        "command": "codeTimeMachine.stopSession",
+        "command": "visualCodeTimeMachine.stopSession",
         "title": "Code Time Machine: Stop Session"
       },
       {
-        "command": "codeTimeMachine.rebuildFileAtTime",
+        "command": "visualCodeTimeMachine.rebuildFileAtTime",
         "title": "Code Time Machine: Rebuild File At Time"
       },
       {
-        "command": "codeTimeMachine.pauseRecording",
+        "command": "visualCodeTimeMachine.pauseRecording",
         "title": "Code Time Machine: Pause Recording"
       },
       {
-        "command": "codeTimeMachine.resumeRecording",
+        "command": "visualCodeTimeMachine.resumeRecording",
         "title": "Code Time Machine: Resume Recording"
       }
     ],
     "configuration": {
       "title": "Code Time Machine",
       "properties": {
-        "codeTimeMachine.enabled": {
+        "visualCodeTimeMachine.enabled": {
           "type": "boolean",
           "default": false,
           "description": "Enable code change recording (opt-in required)"
         },
-        "codeTimeMachine.batchIntervalMs": {
+        "visualCodeTimeMachine.batchIntervalMs": {
           "type": "number",
           "default": 3000,
           "description": "Batch interval for capturing diffs (in milliseconds)"
         },
-        "codeTimeMachine.idleTimeoutMinutes": {
+        "visualCodeTimeMachine.idleTimeoutMinutes": {
           "type": "number",
           "default": 15,
           "description": "Minutes of inactivity before session ends"

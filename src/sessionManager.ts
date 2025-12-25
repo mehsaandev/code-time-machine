@@ -52,7 +52,7 @@ export class SessionManager {
      * Get idle timeout from VS Code configuration
      */
     private getIdleTimeoutFromConfig(): number {
-        const config = vscode.workspace.getConfiguration('codeTimeMachine');
+        const config = vscode.workspace.getConfiguration('visualCodeTimeMachine');
         return config.get<number>('idleTimeoutMinutes', DEFAULT_IDLE_TIMEOUT_MINUTES);
     }
 

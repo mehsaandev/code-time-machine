@@ -7,7 +7,7 @@
  * - Filter out binary files, node_modules, .git, secrets
  * - Track cursor position with diffs
  */
-console.log("Hellow world")
+
 import * as vscode from 'vscode';
 import { v4 as uuidv4 } from 'uuid';
 import { diff_match_patch } from 'diff-match-patch';
@@ -110,7 +110,7 @@ export class DiffEngine {
      * Get batch interval from VS Code configuration
      */
     private getBatchIntervalFromConfig(): number {
-        const config = vscode.workspace.getConfiguration('codeTimeMachine');
+        const config = vscode.workspace.getConfiguration('visualCodeTimeMachine');
         const configValue = config.get<number>('batchIntervalMs', DEFAULT_BATCH_INTERVAL_MS);
         // Clamp to valid range
         return Math.max(MIN_BATCH_INTERVAL_MS, Math.min(MAX_BATCH_INTERVAL_MS, configValue));

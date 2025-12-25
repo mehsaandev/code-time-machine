@@ -49,7 +49,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         registerDocumentListeners(context);
 
         // Check if extension is enabled and auto-start session if workspace is open
-        const config = vscode.workspace.getConfiguration('codeTimeMachine');
+        const config = vscode.workspace.getConfiguration('visualCodeTimeMachine');
         const isEnabled = config.get<boolean>('enabled', false);
 
         if (isEnabled && vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
@@ -123,7 +123,7 @@ function wireComponents(): void {
 function registerCommands(context: vscode.ExtensionContext): void {
     // Command: Start Session
     const startSessionCmd = vscode.commands.registerCommand(
-        'codeTimeMachine.startSession',
+        'visualCodeTimeMachine.startSession',
         async () => {
             if (!sessionManager) {
                 vscode.window.showErrorMessage('Code Time Machine not initialized');
@@ -131,7 +131,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
             }
 
             // Check if recording is enabled
-            const config = vscode.workspace.getConfiguration('codeTimeMachine');
+            const config = vscode.workspace.getConfiguration('visualCodeTimeMachine');
             const isEnabled = config.get<boolean>('enabled', false);
 
             if (!isEnabled) {
@@ -156,7 +156,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
 
     // Command: Stop Session
     const stopSessionCmd = vscode.commands.registerCommand(
-        'codeTimeMachine.stopSession',
+        'visualCodeTimeMachine.stopSession',
         () => {
             if (!sessionManager) {
                 vscode.window.showErrorMessage('Code Time Machine not initialized');
@@ -172,7 +172,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
 
     // Command: Rebuild File At Time
     const rebuildFileCmd = vscode.commands.registerCommand(
-        'codeTimeMachine.rebuildFileAtTime',
+        'visualCodeTimeMachine.rebuildFileAtTime',
         async () => {
             if (!storage || !fileRebuilder) {
                 vscode.window.showErrorMessage('Code Time Machine not initialized');
@@ -257,7 +257,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
 
     // Command: Pause Recording
     const pauseRecordingCmd = vscode.commands.registerCommand(
-        'codeTimeMachine.pauseRecording',
+        'visualCodeTimeMachine.pauseRecording',
         () => {
             if (!diffEngine) {
                 vscode.window.showErrorMessage('Code Time Machine not initialized');
@@ -271,7 +271,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
 
     // Command: Resume Recording
     const resumeRecordingCmd = vscode.commands.registerCommand(
-        'codeTimeMachine.resumeRecording',
+        'visualCodeTimeMachine.resumeRecording',
         () => {
             if (!diffEngine) {
                 vscode.window.showErrorMessage('Code Time Machine not initialized');
@@ -309,7 +309,7 @@ function registerDocumentListeners(context: vscode.ExtensionContext): void {
         }
 
         // Check if recording is enabled
-        const config = vscode.workspace.getConfiguration('codeTimeMachine');
+        const config = vscode.workspace.getConfiguration('visualCodeTimeMachine');
         const isEnabled = config.get<boolean>('enabled', false);
         
         if (!isEnabled) {

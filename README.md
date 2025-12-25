@@ -20,7 +20,7 @@ A VS Code extension that captures code changes as batched diffs and allows you t
 1. **Enable Recording** (Required - Opt-in):
    - Open VS Code Settings
    - Search for "Code Time Machine"
-   - Enable the `codeTimeMachine.enabled` setting
+   - Enable the `visualCodeTimeMachine.enabled` setting
 
 2. **Start Recording**:
    - Run command: `Code Time Machine: Start Session`
@@ -45,9 +45,9 @@ A VS Code extension that captures code changes as batched diffs and allows you t
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `codeTimeMachine.enabled` | `false` | Enable code change recording (opt-in) |
-| `codeTimeMachine.batchIntervalMs` | `3000` | Batch interval for capturing diffs (ms) |
-| `codeTimeMachine.idleTimeoutMinutes` | `15` | Minutes of inactivity before session ends |
+| `visualCodeTimeMachine.enabled` | `false` | Enable code change recording (opt-in) |
+| `visualCodeTimeMachine.batchIntervalMs` | `3000` | Batch interval for capturing diffs (ms) |
+| `visualCodeTimeMachine.idleTimeoutMinutes` | `15` | Minutes of inactivity before session ends |
 
 ## Ignored Files
 

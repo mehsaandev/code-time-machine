@@ -27,42 +27,62 @@ const disposables: vscode.Disposable[] = [];
  */
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     console.log('[CodeTimeMachine] Extension activating...');
+    
+    // Create output channel for logging
+    const outputChannel = vscode.window.createOutputChannel('Code Time Machine');
+    outputChannel.appendLine('[CodeTimeMachine] Extension activating...');
+    outputChannel.show();
 
     try {
+        outputChannel.appendLine('[CodeTimeMachine] Initializing components...');
+        
         // Initialize components early so commands can be registered
         // even if storage initialization fails later during activation.
         sessionManager = new SessionManager();
         diffEngine = new DiffEngine();
+        outputChannel.appendLine('[CodeTimeMachine] SessionManager and DiffEngine initialized');
 
         // Register commands now (callbacks will check for storage/fileRebuilder at runtime)
+        outputChannel.appendLine('[CodeTimeMachine] Registering commands...');
         registerCommands(context);
+        outputChannel.appendLine('[CodeTimeMachine] Commands registered successfully');
 
         // Initialize storage with extension's global storage path
+        outputChannel.appendLine('[CodeTimeMachine] Initializing storage...');
         const storagePath = context.globalStorageUri.fsPath;
+        outputChannel.appendLine(`[CodeTimeMachine] Storage path: ${storagePath}`);
         storage = new Storage(storagePath);
         await storage.initialize();
+        outputChannel.appendLine('[CodeTimeMachine] Storage initialized');
 
         // Now initialize remaining components that depend on storage
+        outputChannel.appendLine('[CodeTimeMachine] Initializing FileRebuilder...');
         fileRebuilder = new FileRebuilder(storage);
 
         // Wire up components and listeners
+        outputChannel.appendLine('[CodeTimeMachine] Wiring components...');
         wireComponents();
+        outputChannel.appendLine('[CodeTimeMachine] Registering document listeners...');
         registerDocumentListeners(context);
 
         // Check if extension is enabled and auto-start session if workspace is open
         const config = vscode.workspace.getConfiguration('visualCodeTimeMachine');
         const isEnabled = config.get<boolean>('enabled', false);
+        outputChannel.appendLine(`[CodeTimeMachine] Extension enabled: ${isEnabled}`);
 
         if (isEnabled && vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
             console.log('[CodeTimeMachine] Auto-starting session (extension enabled and workspace open)');
+            outputChannel.appendLine('[CodeTimeMachine] Auto-starting session...');
             await sessionManager.startSession();
         }
 
         console.log('[CodeTimeMachine] Extension activated successfully');
+        outputChannel.appendLine('[CodeTimeMachine] Extension activated successfully');
         
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error('[CodeTimeMachine] Activation failed:', errorMessage);
+        outputChannel.appendLine(`[CodeTimeMachine] Activation failed: ${errorMessage}`);
         vscode.window.showErrorMessage(`Code Time Machine failed to activate: ${errorMessage}`);
     }
 }
@@ -122,10 +142,13 @@ function wireComponents(): void {
  * Register VS Code commands
  */
 function registerCommands(context: vscode.ExtensionContext): void {
+    console.log('[CodeTimeMachine] Starting command registration...');
+    
     // Command: Start Session
     const startSessionCmd = vscode.commands.registerCommand(
         'visualCodeTimeMachine.startSession',
         async () => {
+            console.log('[CodeTimeMachine] Start session command called');
             if (!sessionManager) {
                 vscode.window.showErrorMessage('Code Time Machine not initialized');
                 return;
@@ -285,6 +308,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
     );
 
     // Register all commands
+    console.log('[CodeTimeMachine] Pushing commands to context subscriptions...');
     context.subscriptions.push(
         startSessionCmd,
         stopSessionCmd,
@@ -292,6 +316,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         pauseRecordingCmd,
         resumeRecordingCmd
     );
+    console.log('[CodeTimeMachine] All commands registered and subscribed');
 }
 
 /**

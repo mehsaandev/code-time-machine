@@ -2,7 +2,7 @@
   "name": "visual-code-time-machine",
   "displayName": "Visual Code Time Machine",
   "description": "Local data-capture layer for visualizing how code evolves over time",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "MuhammadEhsaan",
   "icon": "images/icon.png",
   "license": "MIT",

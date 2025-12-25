@@ -1,0 +1,9 @@
+out/
+node_modules/
+*.vsix
+.vscode-test/
+*.db
+*.db-wal
+*.db-shm
+.DS_Store
+Thumbs.db

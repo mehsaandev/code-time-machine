@@ -2,7 +2,7 @@
   "name": "visual-code-time-machine",
   "displayName": "Visual Code Time Machine",
   "description": "Local data-capture layer for visualizing how code evolves over time",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "MuhammadEhsaan",
   "icon": "images/icon.png",
   "license": "MIT",
@@ -17,8 +17,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "onCommand:visualCodeTimeMachine.startSession"
+    "onStartupFinished"
   ],
   "main": "./out/extension.js",
   "contributes": {

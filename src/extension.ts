@@ -29,23 +29,24 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     console.log('[CodeTimeMachine] Extension activating...');
 
     try {
+        // Initialize components early so commands can be registered
+        // even if storage initialization fails later during activation.
+        sessionManager = new SessionManager();
+        diffEngine = new DiffEngine();
+
+        // Register commands now (callbacks will check for storage/fileRebuilder at runtime)
+        registerCommands(context);
+
         // Initialize storage with extension's global storage path
         const storagePath = context.globalStorageUri.fsPath;
         storage = new Storage(storagePath);
         await storage.initialize();
 
-        // Initialize components
-        sessionManager = new SessionManager();
-        diffEngine = new DiffEngine();
+        // Now initialize remaining components that depend on storage
         fileRebuilder = new FileRebuilder(storage);
 
-        // Wire up components
+        // Wire up components and listeners
         wireComponents();
-
-        // Register commands
-        registerCommands(context);
-
-        // Register document listeners
         registerDocumentListeners(context);
 
         // Check if extension is enabled and auto-start session if workspace is open

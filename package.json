@@ -1,9 +1,9 @@
 {
-  "name": "time-machine",
-  "displayName": "Time Machine",
+  "name": "visual-code-time-machine",
+  "displayName": "Visual Code Time Machine",
   "description": "Track and revert every change in your workspace without Git",
   "icon": "images/icon.png",
-  "version": "1.0.0",
+  "version": "0.1.8",
   "engines": {
     "vscode": "^1.75.0"
   },

@@ -1,6 +1,6 @@
-# ⏰ Code Time Machine
+# ⏰ Visual Code Time Machine
 
-**Travel through your code history without Git.** Code Time Machine is a VS Code extension that automatically captures every change in your workspace, allowing you to jump back to any point in time with a single click.
+**Travel through your code history without Git.** Visual Code Time Machine is a VS Code extension that automatically captures every change in your workspace, allowing you to jump back to any point in time with a single click.
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![VS Code](https://img.shields.io/badge/VS%20Code-^1.75.0-007ACC.svg)
@@ -58,7 +58,7 @@
 
 ### Automatic Capture
 
-Code Time Machine captures snapshots in these scenarios:
+Visual Code Time Machine captures snapshots in these scenarios:
 
 - **On typing** - After 3 seconds of inactivity
 - **On save** - Immediately when you save a file (`Ctrl+S`)

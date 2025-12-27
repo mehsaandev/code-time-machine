@@ -1,11 +1,7 @@
 name: Publish VS Code Extension
 
 on:
-  push:
-    branches:
-      - main
-      - master
-  workflow_dispatch: {}
+  workflow_dispatch: {}  # Trigger manually from GitHub Actions
 
 jobs:
   publish:
@@ -14,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -22,11 +18,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build Extension
         run: npm run compile
 
       - name: Publish VSIX to Visual Studio Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
-          npx -y @vscode/vsce publish
+          npx -y @vscode/vsce publish --pat $VSCE_PAT

@@ -10,6 +10,15 @@
   "categories": [
     "Other"
   ],
+    "keywords": [
+    "history",
+    "time travel",
+    "undo",
+    "backup",
+    "snapshot",
+    "version control",
+    "local history"
+  ],
   "activationEvents": [
     "onStartupFinished"
   ],

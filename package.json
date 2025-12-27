@@ -1,92 +1,72 @@
 {
-  "name": "visual-code-time-machine",
-  "displayName": "Visual Code Time Machine",
-  "description": "Local data-capture layer for visualizing how code evolves over time",
-  "version": "0.1.7",
-  "publisher": "MuhammadEhsaan",
+  "name": "time-machine",
+  "displayName": "Time Machine",
+  "description": "Track and revert every change in your workspace without Git",
   "icon": "images/icon.png",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mehsaandev/code-time-machine"
-  },
+  "version": "1.0.0",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "onCommand:visualCodeTimeMachine.startSession",
-    "onCommand:visualCodeTimeMachine.stopSession",
-    "onCommand:visualCodeTimeMachine.rebuildFileAtTime",
-    "onCommand:visualCodeTimeMachine.pauseRecording",
-    "onCommand:visualCodeTimeMachine.resumeRecording"
+    "onStartupFinished"
   ],
-  "main": "./out/minimal-extension.js",
+  "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "visualCodeTimeMachine.startSession",
-        "title": "Code Time Machine: Start Session"
-      },
-      {
-        "command": "visualCodeTimeMachine.stopSession",
-        "title": "Code Time Machine: Stop Session"
-      },
-      {
-        "command": "visualCodeTimeMachine.rebuildFileAtTime",
-        "title": "Code Time Machine: Rebuild File At Time"
-      },
-      {
-        "command": "visualCodeTimeMachine.pauseRecording",
-        "title": "Code Time Machine: Pause Recording"
-      },
-      {
-        "command": "visualCodeTimeMachine.resumeRecording",
-        "title": "Code Time Machine: Resume Recording"
-      }
-    ],
-    "configuration": {
-      "title": "Code Time Machine",
-      "properties": {
-        "visualCodeTimeMachine.enabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable code change recording (opt-in required)"
-        },
-        "visualCodeTimeMachine.batchIntervalMs": {
-          "type": "number",
-          "default": 3000,
-          "description": "Batch interval for capturing diffs (in milliseconds)"
-        },
-        "visualCodeTimeMachine.idleTimeoutMinutes": {
-          "type": "number",
-          "default": 15,
-          "description": "Minutes of inactivity before session ends"
+    "views": {
+      "explorer": [
+        {
+          "type": "webview",
+          "id": "timeMachine.timeline",
+          "name": "Time Machine"
         }
+      ]
+    },
+    "commands": [
+        {
+        "command": "timeMachine.revertToSnapshot",
+        "title": "Revert to Snapshot",
+        "category": "Time Machine"
+      },
+      {
+        "command": "timeMachine.revertToLatest",
+        "title": "Revert to Latest State",
+        "category": "Time Machine"
+      },
+      {
+        "command": "timeMachine.clearHistory",
+        "title": "Clear History",
+        "category": "Time Machine"
       }
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
-    "@types/uuid": "^10.0.0",
-    "@types/vscode": "^1.85.0",
-    "@typescript-eslint/eslint-plugin": "^6.13.0",
-    "@typescript-eslint/parser": "^6.13.0",
-    "eslint": "^8.54.0",
-    "typescript": "^5.3.0"
+    "@types/diff": "^7.0.2",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.75.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
   },
   "dependencies": {
-    "diff-match-patch": "^1.0.5",
-    "sql.js": "^1.13.0",
-    "uuid": "^9.0.0"
+    "diff": "^5.1.0",
+    "fs-extra": "^11.1.0"
   }
+  ,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mehsaandev/code-time-machine"
+  },
+  "publisher": "MuhammadEhsaan"
 }

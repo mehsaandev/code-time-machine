@@ -350,8 +350,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 ## 📧 Support
 
 - **Issues:** [GitHub Issues](https://github.com/mehsaandev/code-time-machine/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/mehsaandev/code-time-machine/discussions)
-- **Email:** support@example.com
+- **Email:** ehsaan2611@gmail.com
 
 ---
 

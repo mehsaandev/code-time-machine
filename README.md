@@ -354,6 +354,6 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ---
 
-**Made with ⏰ by [Muhammad Ehsaan]** | [GitHub](https://github.com/mehsaandev) | [LinkedIn](https://linkedin.com/in/mehsaan) | [Website](https://mehsaan.vercel.app)
+**Made with ❤️ by Muhammad Ehsaan** | [GitHub](https://github.com/mehsaandev) | [LinkedIn](https://linkedin.com/in/mehsaan) | [Website](https://mehsaan.vercel.app)
 
 *"Because sometimes you need to go back in time without Git."*

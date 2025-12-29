@@ -3,7 +3,7 @@
   "displayName": "Visual Code Time Machine",
   "description": "Track and revert every change in your workspace without Git",
   "icon": "images/icon.png",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "engines": {
     "vscode": "^1.75.0"
   },

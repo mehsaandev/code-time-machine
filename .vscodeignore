@@ -1,7 +1,17 @@
 .vscode/**
 .vscode-test/**
+src/**
+.gitignore
+.eslintrc.json
+tsconfig.json
+**/*.map
+**/*.ts
 node_modules/**
 *.vsix
 *.db
 .DS_Store
 Thumbs.db
+.editorconfig
+.eslintrc*
+**/*.md
+!readme.md

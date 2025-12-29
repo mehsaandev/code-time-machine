@@ -3,14 +3,14 @@
   "displayName": "Visual Code Time Machine",
   "description": "Track and revert every change in your workspace without Git",
   "icon": "images/icon.png",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
-    "keywords": [
+  "keywords": [
     "history",
     "time travel",
     "undo",
@@ -22,7 +22,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./out/extension.js",
+  "main": "./out/extension.bundle.js",
   "contributes": {
     "views": {
       "explorer": [
@@ -34,7 +34,7 @@
       ]
     },
     "commands": [
-        {
+      {
         "command": "timeMachine.revertToSnapshot",
         "title": "Revert to Snapshot",
         "category": "Time Machine"
@@ -52,11 +52,12 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run package",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts"
+    "lint": "eslint src --ext ts",
+    "package": "npm run compile && node build.js"
   },
   "devDependencies": {
     "@types/diff": "^7.0.2",
@@ -65,14 +66,14 @@
     "@types/vscode": "^1.75.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "esbuild": "^0.19.12",
     "eslint": "^8.0.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "diff": "^5.1.0",
     "fs-extra": "^11.1.0"
-  }
-  ,
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/mehsaandev/code-time-machine"

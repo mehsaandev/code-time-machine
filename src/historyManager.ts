@@ -22,13 +22,14 @@ export class HistoryManager {
     private snapshots: Snapshot[] = [];
     private workspacePath: string;
     private isReverting: boolean = false;
+    private initPromise: Promise<void>;
 
     constructor(workspacePath: string) {
         this.workspacePath = workspacePath;
         this.historyDir = path.join(workspacePath, '.history_machine');
         this.blobsDir = path.join(this.historyDir, 'blobs');
         this.manifestPath = path.join(this.historyDir, 'manifest.json');
-        this.initialize();
+        this.initPromise = this.initialize();
     }
 
     private async initialize() {
@@ -42,6 +43,10 @@ export class HistoryManager {
             // Create initial snapshot of current workspace
             await this.captureSnapshot('Initial workspace state', []);
         }
+    }
+
+    async waitForInitialization(): Promise<void> {
+        await this.initPromise;
     }
 
     private async saveManifest() {

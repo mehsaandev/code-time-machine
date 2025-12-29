@@ -64,7 +64,10 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
             }
         });
 
-        this.refresh();
+        // Wait for initialization before first refresh
+        this.historyManager.waitForInitialization().then(() => {
+            this.refresh();
+        });
     }
 
     private async showSnapshotFiles(snapshotId: string) {
@@ -295,8 +298,9 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
         return grouped;
     }
 
-    public refresh() {
+    public async refresh() {
         if (this._view) {
+            await this.historyManager.waitForInitialization();
             const snapshots = this.historyManager.getSnapshots();
             
             this._view.webview.postMessage({

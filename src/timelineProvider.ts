@@ -117,7 +117,7 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                 await this.showFileDiff(snapshotId, message.filePath);
             }
         });
-
+        
         panel.webview.html = `
             <!DOCTYPE html>
             <html>

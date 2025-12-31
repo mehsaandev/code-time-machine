@@ -36,8 +36,10 @@ export function activate(context: vscode.ExtensionContext) {
             
             // Set new timeout - save after 3 seconds of inactivity
             changeTimeout = setTimeout(async () => {
-                await historyManager.captureSnapshot('Document changed', [e.document.uri.fsPath]);
-                timelineProvider.refresh();
+                const created = await historyManager.captureSnapshot('Document changed', [e.document.uri.fsPath]);
+                if (created) {
+                    timelineProvider.refresh();
+                }
             }, 3000);
         })
     );
@@ -53,8 +55,10 @@ export function activate(context: vscode.ExtensionContext) {
                 changeTimeout = undefined;
             }
             
-            await historyManager.captureSnapshot('File saved', [document.uri.fsPath]);
-            timelineProvider.refresh();
+            const created = await historyManager.captureSnapshot('File saved', [document.uri.fsPath]);
+            if (created) {
+                timelineProvider.refresh();
+            }
         })
     );
 
@@ -62,8 +66,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.workspace.onDidCreateFiles(async (e) => {
             const paths = e.files.map(f => f.fsPath);
-            await historyManager.captureSnapshot('Files created', paths);
-            timelineProvider.refresh();
+            const created = await historyManager.captureSnapshot('Files created', paths);
+            if (created) {
+                timelineProvider.refresh();
+            }
         })
     );
 
@@ -71,8 +77,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.workspace.onDidDeleteFiles(async (e) => {
             const paths = e.files.map(f => f.fsPath);
-            await historyManager.captureSnapshot('Files deleted', paths);
-            timelineProvider.refresh();
+            const created = await historyManager.captureSnapshot('Files deleted', paths);
+            if (created) {
+                timelineProvider.refresh();
+            }
         })
     );
 

@@ -313,12 +313,13 @@ echo ".history_machine/" >> .gitignore
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how you can help:
+Contributions are welcome! Please read our **[Contributing Guide](CONTRIBUTING.md)** for details on:
 
-1. **Report bugs** - Open an issue with details and steps to reproduce
-2. **Suggest features** - Share your ideas for improvements
-3. **Submit PRs** - Fork, code, test, and submit pull requests
-4. **Improve docs** - Help make the documentation clearer
+- 🐛 How to report bugs
+- 💡 How to suggest features
+- 🛠️ Development setup
+- 📝 Code style guidelines
+- 🔀 Pull request process
 
 ## 📝 Changelog
 

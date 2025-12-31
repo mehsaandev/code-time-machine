@@ -248,6 +248,28 @@ export class HistoryManager {
         return Object.keys(snapshot.workspaceState);
     }
 
+    async renameSnapshot(snapshotId: string, newDescription: string): Promise<boolean> {
+        const snapshot = this.snapshots.find(s => s.id === snapshotId);
+        if (!snapshot) return false;
+        snapshot.description = newDescription;
+        await this.saveManifest();
+        return true;
+    }
+
+    async getSnapshotFileContent(snapshotId: string, relativePath: string): Promise<string | null> {
+        const snapshot = this.snapshots.find(s => s.id === snapshotId);
+        if (!snapshot) return null;
+        
+        const hash = snapshot.workspaceState[relativePath];
+        if (!hash) return null;
+        
+        try {
+            return await this.loadBlob(hash);
+        } catch {
+            return null;
+        }
+    }
+
     async clearHistory(): Promise<void> {
         this.snapshots = [];
         await fs.emptyDir(this.historyDir);

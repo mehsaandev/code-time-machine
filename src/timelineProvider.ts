@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { HistoryManager, Snapshot } from './historyManager';
 
 export class TimelineProvider implements vscode.WebviewViewProvider {
@@ -61,6 +62,27 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                 case 'refresh':
                     this.refresh();
                     break;
+                case 'rename':
+                    const newName = await vscode.window.showInputBox({
+                        prompt: 'Enter new snapshot name',
+                        value: data.currentName,
+                        validateInput: (value) => {
+                            if (!value || value.trim().length === 0) {
+                                return 'Name cannot be empty';
+                            }
+                            return null;
+                        }
+                    });
+                    if (newName && newName.trim()) {
+                        const success = await this.historyManager.renameSnapshot(data.snapshotId, newName.trim());
+                        if (success) {
+                            vscode.window.showInformationMessage('✅ Snapshot renamed');
+                            this.refresh();
+                        } else {
+                            vscode.window.showErrorMessage('❌ Failed to rename snapshot');
+                        }
+                    }
+                    break;
             }
         });
 
@@ -88,6 +110,13 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
 
         const sortedFiles = files.sort();
         const filesByDir = this.groupFilesByDirectory(sortedFiles);
+
+        // Handle messages from webview
+        panel.webview.onDidReceiveMessage(async (message) => {
+            if (message.type === 'showDiff') {
+                await this.showFileDiff(snapshotId, message.filePath);
+            }
+        });
 
         panel.webview.html = `
             <!DOCTYPE html>
@@ -122,6 +151,18 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                         background: var(--vscode-badge-background);
                         padding: 6px 12px;
                         border-radius: 12px;
+                    }
+                    .hint {
+                        margin-top: 12px;
+                        padding: 10px 14px;
+                        background: var(--vscode-textBlockQuote-background);
+                        border-left: 3px solid var(--vscode-textLink-foreground);
+                        border-radius: 0 6px 6px 0;
+                        font-size: 12px;
+                        color: var(--vscode-descriptionForeground);
+                    }
+                    .hint strong {
+                        color: var(--vscode-foreground);
                     }
                     .search-container {
                         margin-bottom: 20px;
@@ -183,12 +224,34 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                         display: flex;
                         align-items: center;
                         gap: 8px;
+                        cursor: pointer;
                     }
                     .file-item:hover {
                         background: var(--vscode-list-hoverBackground);
                     }
                     .file-icon {
                         font-size: 14px;
+                    }
+                    .file-name {
+                        flex: 1;
+                    }
+                    .diff-btn {
+                        padding: 4px 10px;
+                        background: var(--vscode-button-secondaryBackground);
+                        color: var(--vscode-button-secondaryForeground);
+                        border: none;
+                        border-radius: 4px;
+                        font-size: 11px;
+                        cursor: pointer;
+                        opacity: 0;
+                        transition: all 0.15s;
+                    }
+                    .file-item:hover .diff-btn {
+                        opacity: 1;
+                    }
+                    .diff-btn:hover {
+                        background: var(--vscode-button-background);
+                        color: var(--vscode-button-foreground);
                     }
                     .hidden { display: none; }
                     .result-count {
@@ -205,6 +268,9 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                         <span class="meta-item">🕐 ${new Date(snapshot.timestamp).toLocaleString()}</span>
                         <span class="meta-item">📁 ${files.length} files</span>
                         <span class="meta-item">📝 ${snapshot.description}</span>
+                    </div>
+                    <div class="hint">
+                        <strong>💡 Tip:</strong> Click on any file to compare with the current version in your workspace
                     </div>
                 </div>
                 
@@ -229,9 +295,12 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                             </div>
                             <ul class="file-list">
                                 ${dirFiles.map(f => `
-                                    <li class="file-item" data-file="${f}">
+                                    <li class="file-item" data-file="${f}" onclick="showDiff('${f.replace(/\\/g, '\\\\')}')">
                                         <span class="file-icon">📄</span>
-                                        <span>${f.split('/').pop()}</span>
+                                        <span class="file-name">${f.split('/').pop()}</span>
+                                        <button class="diff-btn" onclick="event.stopPropagation(); showDiff('${f.replace(/\\/g, '\\\\')}')">
+                                            🔍 Compare
+                                        </button>
                                     </li>
                                 `).join('')}
                             </ul>
@@ -240,6 +309,7 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                 </div>
 
                 <script>
+                    const vscode = acquireVsCodeApi();
                     const searchInput = document.getElementById('searchInput');
                     const directories = document.querySelectorAll('.directory');
                     const resultCount = document.getElementById('resultCount');
@@ -276,10 +346,75 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                         const isHidden = fileList.style.display === 'none';
                         fileList.style.display = isHidden ? 'block' : 'none';
                     }
+
+                    function showDiff(filePath) {
+                        vscode.postMessage({ type: 'showDiff', filePath: filePath });
+                    }
                 </script>
             </body>
             </html>
         `;
+    }
+
+    private async showFileDiff(snapshotId: string, relativePath: string) {
+        const snapshotContent = await this.historyManager.getSnapshotFileContent(snapshotId, relativePath);
+        const snapshot = this.historyManager.getSnapshotById(snapshotId);
+        
+        if (snapshotContent === null) {
+            vscode.window.showErrorMessage('Could not retrieve file content from snapshot');
+            return;
+        }
+
+        // Get workspace folder
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders || workspaceFolders.length === 0) {
+            vscode.window.showErrorMessage('No workspace folder found');
+            return;
+        }
+
+        const workspacePath = workspaceFolders[0].uri.fsPath;
+        const currentFilePath = vscode.Uri.file(path.join(workspacePath, relativePath));
+        
+        // Create a virtual document for the snapshot version
+        const snapshotUri = vscode.Uri.parse(`timemachine:${snapshotId}/${relativePath}`);
+        
+        // Register a content provider if not already registered
+        const provider = new (class implements vscode.TextDocumentContentProvider {
+            provideTextDocumentContent(uri: vscode.Uri): string {
+                return snapshotContent;
+            }
+        })();
+
+        const disposable = vscode.workspace.registerTextDocumentContentProvider('timemachine', provider);
+
+        // Check if current file exists
+        let currentExists = true;
+        try {
+            await vscode.workspace.fs.stat(currentFilePath);
+        } catch {
+            currentExists = false;
+        }
+
+        const snapshotDate = snapshot ? new Date(snapshot.timestamp).toLocaleString() : 'Unknown';
+        const fileName = relativePath.split('/').pop() || relativePath;
+
+        if (currentExists) {
+            // Show diff between snapshot and current
+            await vscode.commands.executeCommand(
+                'vscode.diff',
+                snapshotUri,
+                currentFilePath,
+                `${fileName} (Snapshot: ${snapshotDate}) ↔ ${fileName} (Current)`
+            );
+        } else {
+            // File was deleted, just show the snapshot version
+            const doc = await vscode.workspace.openTextDocument(snapshotUri);
+            await vscode.window.showTextDocument(doc, { preview: true });
+            vscode.window.showInformationMessage(`📁 This file no longer exists in the current workspace`);
+        }
+
+        // Clean up the provider after a delay
+        setTimeout(() => disposable.dispose(), 5000);
     }
 
     private groupFilesByDirectory(files: string[]): { [dir: string]: string[] } {
@@ -598,7 +733,7 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
 
         .snapshot-actions {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
             padding: 8px 12px;
             background: var(--vscode-sideBar-background);
@@ -841,6 +976,9 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
                             <button class="snapshot-btn secondary" onclick="viewFiles('\${s.id}')">
                                 View Files
                             </button>
+                            <button class="snapshot-btn secondary" onclick="renameSnap('\${s.id}', '\${s.description.replace(/'/g, "\\\\'")}')">
+                                ✏️ Rename
+                            </button>
                             <button class="snapshot-btn secondary" onclick="exportSnap('\${s.id}')">
                                 Export
                             </button>
@@ -863,6 +1001,10 @@ export class TimelineProvider implements vscode.WebviewViewProvider {
 
         function jumpTo(id) {
             vscode.postMessage({ type: 'revert', snapshotId: id });
+        }
+
+        function renameSnap(id, currentName) {
+            vscode.postMessage({ type: 'rename', snapshotId: id, currentName: currentName });
         }
 
         window.addEventListener('message', e => {

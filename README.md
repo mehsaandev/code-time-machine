@@ -42,12 +42,23 @@
 
 ### Installation
 
-1. Open VS Code
-2. Press `Ctrl+P` (or `Cmd+P` on Mac)
-3. Type `ext install code-time-machine`
-4. Press Enter
+**Option 1: VS Code Marketplace**
 
-### First Use
+[Install from VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=MuhammadEhsaan.visual-code-time-machine)
+
+**Option 2: Command Line**
+
+```bash
+code --install-extension MuhammadEhsaan.visual-code-time-machine
+```
+
+**Option 3: VS Code Quick Open**
+
+1. Press `Ctrl+P` (or `Cmd+P` on Mac)
+2. Type `ext install MuhammadEhsaan.visual-code-time-machine`
+3. Press Enter
+
+### How to Use
 
 1. Open any folder/workspace in VS Code
 2. Look for the **⏰ Time Machine** panel in the Explorer sidebar
@@ -308,22 +319,6 @@ Contributions are welcome! Here's how you can help:
 2. **Suggest features** - Share your ideas for improvements
 3. **Submit PRs** - Fork, code, test, and submit pull requests
 4. **Improve docs** - Help make the documentation clearer
-
-### Development Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/mehsaandev/code-time-machine.git
-
-# Install dependencies
-npm install
-
-# Compile TypeScript
-npm run compile
-
-# Run in development
-# Press F5 in VS Code to launch Extension Development Host
-```
 
 ## 📝 Changelog
 

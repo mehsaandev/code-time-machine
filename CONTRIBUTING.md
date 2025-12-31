@@ -246,6 +246,5 @@ Feel free to open an issue or reach out:
 
 - **GitHub Issues:** [Report an issue](https://github.com/mehsaandev/code-time-machine/issues)
 - **Email:** ehsaan2611@gmail.com
-- **Website:** [mehsaan.vercel.app](https://mehsaan.vercel.app)
-
+- 
 Thank you for contributing! 🙏
